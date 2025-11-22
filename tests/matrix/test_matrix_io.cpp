@@ -6,7 +6,7 @@
 using namespace figures;
 namespace fs = std::filesystem;
 
-class MatrixFileTest : public ::testing::Test {
+class MatrixIOTest : public ::testing::Test {
 protected:
   void SetUp() override {
     auto temp_path = fs::temp_directory_path() / "matrix_test_XXXXXX";
@@ -35,7 +35,7 @@ private:
   std::string temp_dir;
 };
 
-TEST_F(MatrixFileTest, LoadBasicMatrix) {
+TEST_F(MatrixIOTest, LoadBasicMatrix) {
   std::string filepath = createTestFile("basic.txt", "1 0 1\n"
                                                      "0 1 0\n"
                                                      "1 1 1\n");
@@ -56,7 +56,7 @@ TEST_F(MatrixFileTest, LoadBasicMatrix) {
   EXPECT_EQ(1, m(2, 2));
 }
 
-TEST_F(MatrixFileTest, LoadSingleElement) {
+TEST_F(MatrixIOTest, LoadSingleElement) {
   std::string filepath = createTestFile("single.txt", "42\n");
 
   BoolMatrix m = loadMatrixFromFile<uint8_t>(filepath);
@@ -66,7 +66,7 @@ TEST_F(MatrixFileTest, LoadSingleElement) {
   EXPECT_EQ(42, m(0, 0));
 }
 
-TEST_F(MatrixFileTest, LoadSingleRow) {
+TEST_F(MatrixIOTest, LoadSingleRow) {
   std::string filepath = createTestFile("single_row.txt", "1 0 1 1 0\n");
 
   BoolMatrix m = loadMatrixFromFile<uint8_t>(filepath);
@@ -80,7 +80,7 @@ TEST_F(MatrixFileTest, LoadSingleRow) {
   EXPECT_EQ(0, m(0, 4));
 }
 
-TEST_F(MatrixFileTest, LoadSingleColumn) {
+TEST_F(MatrixIOTest, LoadSingleColumn) {
   std::string filepath = createTestFile("single_col.txt", "1\n"
                                                           "0\n"
                                                           "1\n"
@@ -96,7 +96,7 @@ TEST_F(MatrixFileTest, LoadSingleColumn) {
   EXPECT_EQ(1, m(3, 0));
 }
 
-TEST_F(MatrixFileTest, LoadWithVariousWhitespace) {
+TEST_F(MatrixIOTest, LoadWithVariousWhitespace) {
   std::string filepath = createTestFile("whitespace.txt", "1   0\t1  \n"
                                                           "0\t 1 0\n"
                                                           "1  \t1    1  \t \n");
@@ -113,7 +113,7 @@ TEST_F(MatrixFileTest, LoadWithVariousWhitespace) {
   EXPECT_EQ(0, m(1, 2));
 }
 
-TEST_F(MatrixFileTest, LoadWithBlankLines) {
+TEST_F(MatrixIOTest, LoadWithBlankLines) {
   std::string filepath = createTestFile("blank_lines.txt", "1 0\n"
                                                            "\n"
                                                            "0 1\n"
@@ -129,7 +129,7 @@ TEST_F(MatrixFileTest, LoadWithBlankLines) {
   EXPECT_EQ(1, m(1, 1));
 }
 
-TEST_F(MatrixFileTest, LoadIrregularRowsThrows) {
+TEST_F(MatrixIOTest, LoadIrregularRowsThrows) {
   std::string filepath = createTestFile("irregular.txt", "1 0 1 1\n"
                                                          "0 1\n"
                                                          "1 1 1\n");
@@ -137,17 +137,17 @@ TEST_F(MatrixFileTest, LoadIrregularRowsThrows) {
   EXPECT_THROW(loadMatrixFromFile<uint8_t>(filepath), std::runtime_error);
 }
 
-TEST_F(MatrixFileTest, LoadEmptyFileThrows) {
+TEST_F(MatrixIOTest, LoadEmptyFileThrows) {
   std::string filepath = createTestFile("empty.txt", "");
 
   EXPECT_THROW(loadMatrixFromFile<uint8_t>(filepath), std::runtime_error);
 }
 
-TEST_F(MatrixFileTest, LoadNonExistentFileThrows) {
+TEST_F(MatrixIOTest, LoadNonExistentFileThrows) {
   EXPECT_THROW(loadMatrixFromFile<uint8_t>("/nonexistent/path/file.txt"), std::runtime_error);
 }
 
-TEST_F(MatrixFileTest, LoadLargeValues) {
+TEST_F(MatrixIOTest, LoadLargeValues) {
   std::string filepath = createTestFile("large_values.txt", "0 1 255\n"
                                                             "128 64 32\n");
 
@@ -163,21 +163,21 @@ TEST_F(MatrixFileTest, LoadLargeValues) {
   EXPECT_EQ(32, m(1, 2));
 }
 
-TEST_F(MatrixFileTest, LoadOutOfRangeValueThrows) {
+TEST_F(MatrixIOTest, LoadOutOfRangeValueThrows) {
   std::string filepath = createTestFile("out_of_range.txt", "0 1 257\n"
                                                             "128 64 32\n");
 
   EXPECT_THROW(loadMatrixFromFile<uint8_t>(filepath), std::runtime_error);
 }
 
-TEST_F(MatrixFileTest, LoadNegativeValueThrows) {
+TEST_F(MatrixIOTest, LoadNegativeValueThrows) {
   std::string filepath = createTestFile("negative.txt", "0 1 2\n"
                                                         "-1 64 32\n");
 
   EXPECT_THROW(loadMatrixFromFile<uint8_t>(filepath), std::runtime_error);
 }
 
-TEST_F(MatrixFileTest, LoadOnlyWhitespaceThrows) {
+TEST_F(MatrixIOTest, LoadOnlyWhitespaceThrows) {
   std::string filepath = createTestFile("only_whitespace.txt", "   \n"
                                                                "\t\t\n"
                                                                "  \t  \n");
@@ -185,7 +185,7 @@ TEST_F(MatrixFileTest, LoadOnlyWhitespaceThrows) {
   EXPECT_THROW(loadMatrixFromFile<uint8_t>(filepath), std::runtime_error);
 }
 
-TEST_F(MatrixFileTest, LoadInvalidCharacterThrows) {
+TEST_F(MatrixIOTest, LoadInvalidCharacterThrows) {
   std::string filepath = createTestFile("invalid_char.txt", "1 0 1\n"
                                                             "0 abc 0\n");
 
