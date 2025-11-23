@@ -19,6 +19,7 @@ file(GLOB_RECURSE ALL_CXX_SOURCE_FILES
     "${CMAKE_SOURCE_DIR}/src/*.cpp"
     "${CMAKE_SOURCE_DIR}/include/*.hpp"
     "${CMAKE_SOURCE_DIR}/tests/*.cpp"
+    "${CMAKE_SOURCE_DIR}/benchmarks/*.cpp"
 )
 
 add_library(figure_finder STATIC
@@ -58,6 +59,21 @@ add_executable(test_matrix tests/matrix/test_matrix.cpp
 target_link_libraries(test_matrix PRIVATE figure_finder GTest::gtest_main)
 gtest_discover_tests(test_matrix)
 
+set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
+set(BENCHMARK_ENABLE_GTEST_TESTS OFF CACHE BOOL "" FORCE)
+FetchContent_Declare(benchmark
+  GIT_REPOSITORY https://github.com/google/benchmark.git
+  GIT_TAG v1.8.4
+)
+FetchContent_MakeAvailable(benchmark)
+
+add_executable(bench_with_memory benchmarks/bench_with_memory.cpp)
+target_link_libraries(bench_with_memory PRIVATE figure_finder benchmark::benchmark)
+
+# Compare all algorithms
+add_executable(compare_all benchmarks/compare_all.cpp)
+target_link_libraries(compare_all PRIVATE figure_finder)
+
 # Convenience targets
 add_custom_target(run-tests
   COMMAND ctest --output-on-failure
@@ -65,11 +81,16 @@ add_custom_target(run-tests
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
 
+add_custom_target(run-compare-all
+  COMMAND compare_all
+  DEPENDS compare_all
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
+
 add_custom_target(
     clang-format
     COMMAND clang-format
-            -ininj
-            ${ALL_CXX_SOURCE_FILES}
+            -i ${ALL_CXX_SOURCE_FILES}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Running clang-format on all source files"
 )
@@ -77,8 +98,8 @@ add_custom_target(
 add_custom_target(
   clang-tidy
   COMMAND clang-tidy
-      -p ${CMAKE_BINARY_DIR}
-      ${ALL_CXX_SOURCE_FILES}
+          -p ${CMAKE_BINARY_DIR}
+          ${ALL_CXX_SOURCE_FILES}
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
   COMMENT "Running clang-tidy on all source files"
 )

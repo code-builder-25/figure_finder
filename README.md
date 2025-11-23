@@ -53,8 +53,19 @@ cd build && ninja clang-format
 cd build && ninja clang-tidy
 # or
 clang-tidy ../src/main.cpp -- -I../include
-# or
+# orclang
 run-clang-tidy -p build
+```
+
+### Run benchmarks
+```bash
+# Run compare all algorithms
+cd build && ./compare_all
+# or
+cd build && ninja run-compare-all
+
+# Run CPU + memory benchmark for all algorithms
+cd build && ./bench_with_memory
 ```
 
 ## Data
@@ -69,5 +80,5 @@ Refer to the `data` folder for sample matrices.
 
 Generate matrices of custom size, figure count, and average figure size using the following script:
 ```bash
-python3 scripts/generate_matrix.py --rows 2000 --cols 1500 --figures 50000 --outfile data/matrix.txt
+python3 scripts/generate_matrix.py --rows 2000 --cols 1500 --figures 50000 --outfile data/matrix.txt 
 ```
