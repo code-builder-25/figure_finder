@@ -10,7 +10,7 @@ namespace figures {
 // Generic 2D matrix
 template <typename T> class Matrix {
 public:
-  Matrix(size_t rows, size_t cols, T default_value = T{});
+  Matrix(size_t rows=0, size_t cols=0, T default_value = T{});
   Matrix(const std::vector<std::vector<T>>& vec);
 
   T& operator()(size_t row, size_t col);
