@@ -1,0 +1,6 @@
+Checks: >
+  bugprone-*,performance-*,readability-*,modernize-*,clang-analyzer-*,
+  cppcoreguidelines-*,hicpp-*
+WarningsAsErrors: ''
+HeaderFilterRegex: '.*'
+FormatStyle: none
