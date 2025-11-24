@@ -70,11 +70,24 @@ void printResults(const vector<BenchmarkResult>& results, const string& file_des
   cout << string(80, '=') << endl;
 }
 
-int main() {
-  vector<string> test_files = {"../data/matrix_7500x6000_5M.txt",
-                               "../data/matrix_12000x10000_20M.txt"};
+int main(int argc, char* argv[]) {
+  vector<string> test_files;
+  vector<string> descriptions;
 
-  vector<string> descriptions = {"Extra Large 5M figures", "Extra Large 20M figures"};
+  if (argc > 1) {
+    if ((argc - 1) % 2 != 0) {
+      cerr << "Usage: " << argv[0] << " <file1> <desc1> [<file2> <desc2> ...]" << endl;
+      return 1;
+    }
+    for (int i = 1; i < argc; i += 2) {
+      test_files.push_back(argv[i]);
+      descriptions.push_back(argv[i + 1]);
+    }
+  } else {
+    test_files = {"../data/matrix_7500x6000_5M.txt",
+                  "../data/matrix_12000x10000_20M.txt"};
+    descriptions = {"Extra Large 5M figures", "Extra Large 20M figures"};
+  }
 
   cout << "\n" << string(80, '=') << endl;
   cout << "ALGORITHM COMPARISON ON EXTRA LARGE FILES" << endl;
