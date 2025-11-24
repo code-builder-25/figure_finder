@@ -59,4 +59,4 @@ jobs:
           ls -l build/test_figure_finder build/test_matrix build/compare_all
           chmod +x build/test_figure_finder build/test_matrix build/compare_all || true
       - name: Run benchmarks
-        run: ./build/compare_all || true
+        run: cd build && ./compare_all || true
