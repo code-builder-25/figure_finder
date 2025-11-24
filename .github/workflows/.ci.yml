@@ -35,8 +35,11 @@ jobs:
         with:
           name: build
           path: build
-      - name: Make all build executables executable
-        run: find build -type f -executable -exec chmod +x {} +
+      - name: LS build directory
+        run: |
+          ls -R build
+          ls -l build/test_figure_finder build/test_matrix build/compare_all
+          chmod +x build/test_figure_finder build/test_matrix build/compare_all || true
       - name: Run tests
         run: ctest --test-dir build --output-on-failure
 
@@ -50,7 +53,10 @@ jobs:
         with:
           name: build
           path: build
-      - name: Make all build executables executable
-        run: find build -type f -executable -exec chmod +x {} +
+      - name: LS build directory
+        run: |
+          ls -R build
+          ls -l build/test_figure_finder build/test_matrix build/compare_all
+          chmod +x build/test_figure_finder build/test_matrix build/compare_all || true
       - name: Run benchmarks
         run: ./build/compare_all || true
