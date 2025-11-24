@@ -59,4 +59,4 @@ jobs:
           ls -l build/test_figure_finder build/test_matrix build/compare_all
           chmod +x build/test_figure_finder build/test_matrix build/compare_all || true
       - name: Run benchmarks
-        run: cd build && ./compare_all || true
+        run: ./build/compare_all "data/matrix_5000x4000_1M.txt" "Extra Large 1M figures" "data/matrix_7500x6000_5M.txt" "Extra Large 5M figures" || true
