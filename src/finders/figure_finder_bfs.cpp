@@ -24,10 +24,10 @@ size_t FigureFinderBFS::countFigures(const BoolMatrix& matrix) {
           bfs_queue.pop();
 
           for (const auto& [direction_x, direction_y] : directions) {
-            if (current_row == 0 && direction_x == -1 ||
-                current_row == matrix.rows() - 1 && direction_x == 1 ||
-                current_column == 0 && direction_y == -1 ||
-                current_column == matrix.cols() - 1 && direction_y == 1)
+            if ((current_row == 0 && direction_x == -1) ||
+                (current_row == matrix.rows() - 1 && direction_x == 1) ||
+                (current_column == 0 && direction_y == -1) ||
+                (current_column == matrix.cols() - 1 && direction_y == 1))
               continue;
 
             auto next_row = current_row + direction_x;
