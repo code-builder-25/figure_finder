@@ -21,7 +21,8 @@ if [ $# -lt 1 ]; then
   exit 1
 fi
 
-FILE="$1"
+RESULTS_DIR="${1}"
+FILE="${RESULTS_DIR}/perf_stat.txt"
 L1_THRESHOLD="${2:-2.0}"
 CACHE_THRESHOLD="${3:-60.0}"
 
