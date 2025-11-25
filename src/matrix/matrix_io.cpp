@@ -11,8 +11,7 @@ namespace {
 
 constexpr bool isWhitespace(char c) { return c == ' ' || c == '\t' || c == '\r' || c == '\n'; }
 
-template <typename T> std::vector<T> parseLine(const std::string& line) {
-  std::vector<T> row;
+template <typename T> std::vector<T> parseLine(const std::string& line, std::vector<T>& row) {
   const char* ptr = line.data();
   const char* end = ptr + line.size();
 
@@ -32,8 +31,6 @@ template <typename T> std::vector<T> parseLine(const std::string& line) {
     row.push_back(value);
     ptr = next_ptr;
   }
-
-  return row;
 }
 } // namespace
 
@@ -52,8 +49,9 @@ template <typename T> Matrix<T> loadMatrixFromFile(const std::string& filename) 
     }
 
     std::vector<T> row;
+    row.reserve(rows.empty() ? 0 : rows[0].size());
     try {
-      row = parseLine<T>(line);
+      parseLine<T>(line, row);
     } catch (const std::runtime_error& e) {
       throw std::runtime_error(e.what() + std::string(" in file: ") + filename);
     }
