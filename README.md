@@ -29,6 +29,7 @@ cmake --build build -j
 # or
 cd build && ninja
 ```
+
 ### Run tests
 ```bash
 # Run tests
@@ -40,8 +41,7 @@ cd build && ninja run-tests
 ### Run application
 ```bash
 # Run figure finder application
-cd build && ./figure_finder_app data/matrix_120x100_500.txt
-
+cd build && ./bin/figure_finder_app data/matrix_120x100_500.txt
 ```
 
 ### Run Tools
@@ -60,13 +60,57 @@ run-clang-tidy -p build
 ### Run benchmarks
 ```bash
 # Run compare all algorithms
-cd build && ./compare_all
+cd build && ./bin/compare_all
 # or
 cd build && ninja run-compare-all
 
 # Run CPU + memory benchmark for all algorithms
-cd build && ./bench_with_memory
+cd build && ./bin/bench_with_memory
 ```
+
+### Run sanitizers
+```bash
+# Run Asan + Ubsan
+./scripts/sanitizers/run_asan.sh figure_finder_app data/matrix_2000x1500_50K.txt
+# Run Tsan
+./scripts/sanitizers/run_tsan.sh figure_finder_app data/matrix_2000x1500_50K.txt
+```
+
+### Run memory profilers
+```bash
+mkdir -p profiling_results
+# Run heaptrack
+apt-get update && apt-get install heaptrack heaptrack-gui
+./scripts/profilers/heaptrack/run_heaptrack.sh profiling_results ./build/bin/figure_finder_app data/matrix_2000x1500_50K.txt
+./scripts/profilers/heaptrack/analyze_heaptrack.sh profiling_results 100
+./scripts/profilers/heaptrack/visualize_heaptrack.sh profiling_results
+
+# Run Valgrind Massif
+apt-get update && apt-get install valgrind massif-visualizer
+./scripts/profilers/massif/run_massif.sh profiling_results ./build/bin/figure_finder_app data/matrix_2000x1500_50K.txt
+./scripts/profilers/massif/analyze_massif.sh profiling_results 500
+./scripts/profilers/massif/visualize_massif.sh profiling_results ./build/bin/figure_finder_app data/matrix_2000x1500_50K.txt
+
+# Run Valgrind Memcheck
+apt-get update && apt-get install valgrind
+./scripts/profilers/memcheck/run_memcheck.sh profiling_results ./build/bin/figure_finder_app data/matrix_2000x1500_50K.txt
+./scripts/profilers/memcheck/analyze_memcheck.sh profiling_results
+
+# Run Perf
+apt-get update && apt-get install linux-tools-generic linux-cloud-tools-generic
+sudo sysctl kernel.perf_event_paranoid=0 # fix perf Permission Denied on host
+./scripts/profilers/perf/run_perf.sh profiling_results ./build/bin/figure_finder_app data/matrix_2000x1500_50K.txt
+./scripts/profilers/perf/analyze_perf.sh profiling_results
+./scripts/profilers/perf/visualize_perf.sh profiling_results ./build/bin/figure_finder_app data/matrix_2000x1500_50K.txt
+```
+
+### References
+
+- [Google Benchmark Docs](https://github.com/google/benchmark)
+- [Valgrind Manual](https://valgrind.org/docs/manual/ms-manual.html)
+- [Heaptrack GitHub](https://github.com/KDE/heaptrack)
+- [Linux perf Examples](https://www.brendangregg.com/perf.html)
+- [Sanitizers (ASan/MSan/TSan)](https://iree.dev/developers/debugging/sanitizers/)
 
 ## Data
 
