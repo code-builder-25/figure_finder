@@ -11,7 +11,7 @@ namespace {
 
 constexpr bool isWhitespace(char c) { return c == ' ' || c == '\t' || c == '\r' || c == '\n'; }
 
-template <typename T> std::vector<T> parseLine(const std::string& line, std::vector<T>& row) {
+template <typename T> void parseLine(const std::string& line, std::vector<T>& row) {
   const char* ptr = line.data();
   const char* end = ptr + line.size();
 
