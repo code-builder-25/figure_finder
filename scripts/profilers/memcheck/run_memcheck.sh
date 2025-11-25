@@ -13,7 +13,7 @@ shift 2  # Shift away the first two parameters, leaving only executable args
 # Ensure the output directory exists
 mkdir -p "$RESULTS_DIR"
 
-# Run valgrind memcheck with the provided executable and arguments
+# Run Valgrind Memcheck with the provided executable and arguments
 echo "Running Valgrind Memcheck..."
 valgrind --leak-check=full \
   --show-leak-kinds=all \

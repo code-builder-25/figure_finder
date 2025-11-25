@@ -3,12 +3,6 @@
 # Counts L1-dcache and cache-miss rates per domain (cpu_core, cpu_atom, ...),
 # including only domains where BOTH relevant counters are present and supported.
 #
-# Usage:
-#   analyze_perf_stat.sh <perf_output.txt> [L1_THRESHOLD%] [CACHE_THRESHOLD%]
-# Defaults:
-#   L1_THRESHOLD = 2.0
-#   CACHE_THRESHOLD = 60.0
-#
 # Exit codes:
 #   0 - OK (within thresholds)
 #   2 - Any metric exceeds threshold
@@ -17,7 +11,7 @@
 set -eu
 
 if [ $# -lt 1 ]; then
-  echo "Usage: $0 <perf_output.txt> [L1_THRESHOLD%] [CACHE_THRESHOLD%]" >&2
+  echo "Usage: $0 <results_dir> [L1_THRESHOLD%] [CACHE_THRESHOLD%]" >&2
   exit 1
 fi
 

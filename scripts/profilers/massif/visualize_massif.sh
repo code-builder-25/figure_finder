@@ -2,7 +2,7 @@
 # Perf profiler
 
 if [ "$#" -lt 2 ]; then
-  echo "Usage: $0 <out_dir> <executable> [executable args...]"
+  echo "Usage: $0 <results_dir> <executable> [executable args...]"
   exit 1
 fi
 
