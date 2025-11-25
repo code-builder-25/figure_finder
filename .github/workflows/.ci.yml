@@ -38,8 +38,8 @@ jobs:
       - name: LS build directory
         run: |
           ls -R build
-          ls -l build/test_figure_finder build/test_matrix build/compare_all
-          chmod +x build/test_figure_finder build/test_matrix build/compare_all || true
+          ls -l build/bin/test_figure_finder build/bin/test_matrix build/bin/compare_all
+          chmod +x build/bin/test_figure_finder build/bin/test_matrix build/bin/compare_all || true
       - name: Run tests
         run: ctest --test-dir build --output-on-failure
 
@@ -56,10 +56,10 @@ jobs:
       - name: LS build directory
         run: |
           ls -R build
-          ls -l build/test_figure_finder build/test_matrix build/compare_all
-          chmod +x build/test_figure_finder build/test_matrix build/compare_all || true
+          ls -l build/bin/test_figure_finder build/bin/test_matrix build/bin/compare_all
+          chmod +x build/bin/test_figure_finder build/bin/test_matrix build/bin/compare_all || true
       - name: Run benchmarks
-        run: ./build/compare_all "data/matrix_5000x4000_1M.txt" "Extra Large 1M figures" "data/matrix_7500x6000_5M.txt" "Extra Large 5M figures" || true
+        run: ./build/bin/compare_all "data/matrix_5000x4000_1M.txt" "Extra Large 1M figures" "data/matrix_7500x6000_5M.txt" "Extra Large 5M figures" || true
 
   sanitizers:
     runs-on: ubuntu-latest
