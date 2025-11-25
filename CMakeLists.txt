@@ -4,9 +4,45 @@ project(figure_finder LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(GTEST_DISCOVER_TESTS_DISCOVERY_MODE PRE_TEST)
 
 option(ENABLE_WARNINGS "Enable extra warnings" ON)
 option(ENABLE_WERROR "Treat warnings as errors" OFF)
+option(ENABLE_ASAN  "Enable AddressSanitizer" OFF)
+option(ENABLE_UBSAN "Enable UndefinedBehaviorSan." OFF)
+option(ENABLE_TSAN  "Enable ThreadSanitizer" OFF)
+option(ENABLE_MSAN  "Enable MemorySanitizer" OFF)
+
+# Guard against incompatible mixes
+if(ENABLE_ASAN AND ENABLE_TSAN)
+  message(FATAL_ERROR "ASan and TSan cannot be used together.")
+endif()
+if(ENABLE_MSAN AND NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  message(FATAL_ERROR "MSan requires Clang.")
+endif()
+
+# Sanitizer settings
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+  add_library(project_sanitizers INTERFACE)
+  set(_SAN_FLAGS "")
+  if(ENABLE_ASAN)
+    list(APPEND _SAN_FLAGS -fsanitize=address)
+  endif()
+  if(ENABLE_UBSAN)
+    list(APPEND _SAN_FLAGS -fsanitize=undefined)
+  endif()
+  if(ENABLE_TSAN)
+    list(APPEND _SAN_FLAGS -fsanitize=thread)
+  endif()
+  if(ENABLE_MSAN)
+    list(APPEND _SAN_FLAGS -fsanitize=memory -fsanitize-memory-track-origins=2)
+  endif()
+
+  target_compile_options(project_sanitizers INTERFACE
+    -fno-omit-frame-pointer -g ${_SAN_FLAGS})
+  target_link_options(project_sanitizers INTERFACE ${_SAN_FLAGS})
+endif()
 
 if(ENABLE_WARNINGS)
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -37,6 +73,7 @@ target_link_libraries(figure_finder PUBLIC pthread)
 # Main executable
 add_executable(figure_finder_app src/main.cpp)
 target_link_libraries(figure_finder_app PRIVATE figure_finder)
+
 
 include(FetchContent)
 set(BUILD_GMOCK OFF CACHE BOOL "" FORCE)
@@ -73,6 +110,21 @@ target_link_libraries(bench_with_memory PRIVATE figure_finder benchmark::benchma
 # Compare all algorithms
 add_executable(compare_all benchmarks/compare_all.cpp)
 target_link_libraries(compare_all PRIVATE figure_finder)
+
+set(PROJECT_LOCAL_TARGETS
+  figure_finder
+  figure_finder_app
+  test_figure_finder
+  test_matrix
+  bench_with_memory
+  compare_all
+)
+
+foreach(t ${PROJECT_LOCAL_TARGETS})
+  if(TARGET ${t} AND TARGET project_sanitizers)
+    target_link_libraries(${t} PRIVATE project_sanitizers)
+  endif()
+endforeach()
 
 # Convenience targets
 add_custom_target(run-tests
