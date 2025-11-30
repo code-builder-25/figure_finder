@@ -84,9 +84,11 @@ int main(int argc, char* argv[]) {
       descriptions.push_back(argv[i + 1]);
     }
   } else {
-    test_files = {"../data/matrix_7500x6000_5M.txt",
-                  "../data/matrix_12000x10000_20M.txt"};
-    descriptions = {"Extra Large 5M figures", "Extra Large 20M figures"};
+    test_files = {
+        "../data/matrix_5000x4000_1M.txt",
+        "../data/matrix_7500x6000_5M.txt",
+    };
+    descriptions = {"Extra Large 1M figures", "Extra Large 5M figures"};
   }
 
   cout << "\n" << string(80, '=') << endl;
