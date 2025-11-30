@@ -1,6 +1,7 @@
 #include "finders/figure_finder_factory.hpp"
 #include "finders/figure_finder_bfs.hpp"
 #include "finders/figure_finder_gcc.hpp"
+#include "finders/figure_finder_gcc_divided_parallel.hpp"
 #include "finders/figure_finder_gcc_parallel.hpp"
 #include <array>
 #include <functional>
@@ -17,6 +18,8 @@ inline const std::array<std::tuple<FigureFinderType, const char*, CreatorFunctio
     factoryArray = {
         {{FigureFinderType::BFS, "BFS", []() { return std::make_unique<FigureFinderBFS>(); }},
          {FigureFinderType::GCC, "GCC", []() { return std::make_unique<FigureFinderGCC>(); }},
+         {FigureFinderType::GCCDividedParallel, "GCCDividedParallel",
+          []() { return std::make_unique<FigureFinderGCCDividedParallel>(); }},
          {FigureFinderType::GCCParallel, "GCCParallel",
           []() { return std::make_unique<FigureFinderGCCParallel>(); }}}};
 

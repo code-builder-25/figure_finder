@@ -10,6 +10,7 @@ namespace figures {
 enum class FigureFinderType {
   BFS,
   GCC,
+  GCCDividedParallel,
   GCCParallel,
   Count // Always keep this last
 };

@@ -51,13 +51,13 @@ void printResults(const vector<BenchmarkResult>& results, const string& file_des
     }
   }
 
-  cout << left << setw(15) << "Algorithm" << right << setw(15) << "Figures" << setw(15)
+  cout << left << setw(20) << "Algorithm" << right << setw(15) << "Figures" << setw(15)
        << "Time (s)" << setw(20) << "vs Fastest" << endl;
   cout << string(80, '-') << endl;
 
   for (const auto& r : results) {
     double ratio = r.time_seconds / min_time;
-    cout << left << setw(15) << r.algorithm_name << right << setw(15) << r.figure_count << setw(15)
+    cout << left << setw(20) << r.algorithm_name << right << setw(15) << r.figure_count << setw(15)
          << fixed << setprecision(2) << r.time_seconds;
 
     if (ratio <= 1.01) {

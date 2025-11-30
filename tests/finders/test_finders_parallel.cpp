@@ -7,11 +7,10 @@ using namespace figures;
 
 class AllParallelFindersTest : public ::testing::TestWithParam<FigureFinderType> {};
 
-INSTANTIATE_TEST_SUITE_P(AllParallelFinders, AllParallelFindersTest,
-                         ::testing::ValuesIn({FigureFinderType::GCCParallel}),
-                         [](const ::testing::TestParamInfo<FigureFinderType>& info) {
-                           return toString(info.param);
-                         });
+INSTANTIATE_TEST_SUITE_P(
+    AllParallelFinders, AllParallelFindersTest,
+    ::testing::ValuesIn({FigureFinderType::GCCDividedParallel, FigureFinderType::GCCParallel}),
+    [](const ::testing::TestParamInfo<FigureFinderType>& info) { return toString(info.param); });
 
 TEST_P(AllParallelFindersTest, LargeConnectedComponent) {
   BoolMatrix matrix(200, 200, 1);

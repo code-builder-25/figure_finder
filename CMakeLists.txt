@@ -63,6 +63,7 @@ add_library(figure_finder STATIC
   src/finders/figure_finder_bfs.cpp  
   src/finders/figure_finder_factory.cpp
   src/finders/figure_finder_gcc.cpp
+  src/finders/figure_finder_gcc_divided_parallel.cpp
   src/finders/figure_finder_gcc_parallel.cpp
   src/matrix/matrix.cpp
   src/matrix/matrix_io.cpp
